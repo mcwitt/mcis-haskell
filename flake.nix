@@ -12,6 +12,7 @@
         packages = _: [ self.packages.${system}.default ];
         withHoogle = true;
         buildInputs = with pkgs.haskellPackages; [
+          cabal-fmt
           cabal-install
           haskell-language-server
           hlint
