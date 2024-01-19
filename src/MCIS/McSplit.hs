@@ -1,15 +1,14 @@
-module McSplit (mcis, bound) where
+module MCIS.McSplit (mcis) where
 
 import Control.Monad.State
-import DFS (generateM, pruneBy)
 import Data.Array ((!))
-import Data.Foldable (maximumBy)
 import Data.Function (on)
 import Data.Graph (Graph, Vertex, vertices)
 import Data.List (delete, partition)
 import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Tree
+import Search.DFS (generateM, pruneBy)
 
 type Mapping = Map Vertex Vertex
 
@@ -35,27 +34,21 @@ extend g1 g2 (mapping, labelClasses) = do
         let next =
               ( Map.insert v1 v2 mapping,
                 concatMap
-                  ( \(vs1, vs2) ->
-                      let (vs1a, vs1b) = partition (adj g1 v1) (delete v1 vs1)
-                          (vs2a, vs2b) = partition (adj g2 v2) (delete v2 vs2)
-                       in [(vs1a, vs2a), (vs1b, vs2b)]
+                  ( \(u1s, u2s) ->
+                      let (u1sa, u1sb) = partition (adj g1 v1) (delete v1 u1s)
+                          (u2sa, u2sb) = partition (adj g2 v2) (delete v2 u2s)
+                       in [(u1sa, u2sa), (u1sb, u2sb)]
                   )
                   labelClasses
               ),
         bound next >= incumbentSize
     ]
 
-maximaBy :: (a -> a -> Ordering) -> [a] -> [a]
-maximaBy cmp xs =
-  let maxValue = maximumBy cmp xs
-   in filter (\x -> cmp maxValue x == EQ) xs
-
-mcis :: Graph -> Graph -> [Mapping]
-mcis g1 g2 = foldTree f $ flip evalState 0 $ dfs (extend g1 g2) root
+mcisSearchTree :: Graph -> Graph -> Tree McSplit
+mcisSearchTree g1 g2 = flip evalState 0 $ dfs (extend g1 g2) root
   where
     dfs children v = head . pruneBy fst <$> generateM children [v]
-
-    f :: McSplit -> [[Mapping]] -> [Mapping]
-    f (mapping, _) ts = maximaBy (compare `on` length) (mapping : concat ts)
-
     root = (Map.empty, [(vertices g1, vertices g2)])
+
+mcis :: Graph -> Graph -> [Mapping]
+mcis g1 g2 = last $ levels $ fst <$> mcisSearchTree g1 g2

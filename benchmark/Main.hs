@@ -1,14 +1,16 @@
 import Criterion.Main
-import McSplit (mcis)
-import McSplit.Examples (mcsplitPaperPair)
+import MCIS.Examples (mcsplitPaperPair)
+import MCIS.McSplit (mcis)
 
+main :: IO ()
 main =
   defaultMain
     [ bgroup
         "mcis"
-        [mcisOnMcsplitPaperPair]
+        [bgroup "mcsplit" [mcisOnMcsplitPaperPair]]
     ]
 
+mcisOnMcsplitPaperPair :: Benchmark
 mcisOnMcsplitPaperPair =
   let (g1, g2) = mcsplitPaperPair
    in bench "McSplit paper pair" $ nf (mcis g1) g2

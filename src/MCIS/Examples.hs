@@ -1,4 +1,4 @@
-module McSplit.Examples where
+module MCIS.Examples where
 
 import Data.Graph (Bounds, Edge, Graph, buildG)
 

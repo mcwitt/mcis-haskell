@@ -5,8 +5,8 @@ module Main (main) where
 import Data.Function (on)
 import Data.List (sort)
 import Data.Map qualified as Map
-import McSplit (mcis)
-import McSplit.Examples (mcsplitPaperPair)
+import MCIS.Examples (mcsplitPaperPair)
+import MCIS.McSplit (mcis)
 import Test.Tasty
 import Test.Tasty.HUnit
 

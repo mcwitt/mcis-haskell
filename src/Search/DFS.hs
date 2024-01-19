@@ -1,4 +1,4 @@
-module DFS where
+module Search.DFS where
 
 import Control.Monad.ST (ST, runST)
 import Data.HashTable.ST.Basic qualified as H

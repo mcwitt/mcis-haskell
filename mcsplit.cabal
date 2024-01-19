@@ -60,9 +60,9 @@ library
 
   -- Modules exported by the library.
   exposed-modules:
-    DFS
-    McSplit
-    McSplit.Examples
+    MCIS.Examples
+    MCIS.McSplit
+    Search.DFS
 
   -- Modules included in this library but not exported.
   -- other-modules:
