@@ -1,5 +1,3 @@
-{-# LANGUAGE BlockArguments #-}
-
 module DFS where
 
 import Control.Monad.ST (ST, runST)
@@ -21,25 +19,26 @@ generate children = map go
   where
     go x = Node x $ map go (children x)
 
-prune :: forall a. (Hashable a) => Forest a -> Forest a
-prune xs = runST (H.new >>= chop xs)
+pruneBy :: (Hashable k) => (a -> k) -> Forest a -> Forest a
+pruneBy mkKey xs = runST (H.new >>= chop xs)
   where
     chop [] _ = return []
     chop (Node x ts : us) m = do
-      visited <- member x m
+      let k = mkKey x
+      visited <- member k m
       if visited
         then chop us m
         else do
-          insert x m
+          insert k m
           ts' <- chop ts m
           us' <- chop us m
           return (Node x ts' : us')
 
+prune :: (Hashable a) => Forest a -> Forest a
+prune = pruneBy id
+
 dfs :: (Hashable a) => (a -> [a]) -> [a] -> Forest a
 dfs children = prune . generate children
-
-dfs1 :: (Hashable a) => (a -> [a]) -> a -> Tree a
-dfs1 children = head . dfs children . (: [])
 
 generateM :: forall a m. (Monad m) => (a -> m [a]) -> [a] -> m (Forest a)
 generateM children = mapM go
@@ -52,6 +51,3 @@ generateM children = mapM go
 
 dfsM :: (Hashable a, Monad m) => (a -> m [a]) -> [a] -> m (Forest a)
 dfsM children = fmap prune . generateM children
-
-dfsM1 :: (Hashable a, Monad m) => (a -> m [a]) -> a -> m (Tree a)
-dfsM1 children = fmap head . dfsM children . (: [])
