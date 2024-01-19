@@ -59,7 +59,10 @@ library
   import:           warnings
 
   -- Modules exported by the library.
-  exposed-modules:  MyLib
+  exposed-modules:
+    DFS
+    McSplit
+    McSplit.Examples
 
   -- Modules included in this library but not exported.
   -- other-modules:
@@ -69,11 +72,12 @@ library
 
   -- Other library packages from which modules are imported.
   build-depends:
-                  array
-                , base        ^>=4.17.2.1
-                , containers
-                , hashable
-                , hashtables
+    , array
+    , base        ^>=4.17.2.1
+    , containers
+    , hashable
+    , hashtables
+    , mtl
 
   -- Directories containing source files.
   hs-source-dirs:   src
@@ -105,6 +109,18 @@ executable mcsplit
   -- Base language which the package is written in.
   default-language: GHC2021
 
+executable mcsplit-benchmark
+  import:           warnings
+  ghc-options:      -O2
+  main-is:          Main.hs
+  build-depends:
+    , base       ^>=4.17.2.1
+    , criterion
+    , mcsplit
+
+  hs-source-dirs:   benchmark
+  default-language: GHC2021
+
 test-suite mcsplit-test
   -- Import common warning flags.
   import:           warnings
@@ -129,5 +145,8 @@ test-suite mcsplit-test
 
   -- Test dependencies.
   build-depends:
-    , base     ^>=4.17.2.1
+    , base         ^>=4.17.2.1
+    , containers
     , mcsplit
+    , tasty
+    , tasty-hunit
