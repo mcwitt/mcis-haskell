@@ -1,18 +1,9 @@
 module Search.DFS where
 
-import Control.Monad.ST (ST, runST)
-import Data.HashTable.ST.Basic qualified as H
+import Control.Monad.State
+import Data.HashSet qualified as HS
 import Data.Hashable
-import Data.Maybe (isJust)
 import Data.Tree (Forest, Tree (Node))
-
-type HashSet s k = H.HashTable s k ()
-
-insert :: (Hashable k) => k -> HashSet s k -> ST s ()
-insert k ht = H.insert ht k ()
-
-member :: (Hashable k) => k -> HashSet s k -> ST s Bool
-member k ht = isJust <$> H.lookup ht k
 
 generate :: (a -> [a]) -> [a] -> Forest a
 generate children = map go
@@ -20,18 +11,18 @@ generate children = map go
     go x = Node x $ map go (children x)
 
 pruneBy :: (Hashable k) => (a -> k) -> Forest a -> Forest a
-pruneBy mkKey xs = runST (H.new >>= chop xs)
+pruneBy mkKey xs = evalState (chop xs) HS.empty
   where
-    chop [] _ = return []
-    chop (Node x ts : us) m = do
+    chop [] = return []
+    chop (Node x ts : us) = do
       let k = mkKey x
-      visited <- member k m
+      visited <- gets (HS.member k)
       if visited
-        then chop us m
+        then chop us
         else do
-          insert k m
-          ts' <- chop ts m
-          us' <- chop us m
+          modify (HS.insert k)
+          ts' <- chop ts
+          us' <- chop us
           return (Node x ts' : us')
 
 prune :: (Hashable a) => Forest a -> Forest a

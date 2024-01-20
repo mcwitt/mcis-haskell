@@ -76,8 +76,8 @@ library
     , base        ^>=4.17.2.1
     , containers
     , hashable
-    , hashtables
     , mtl
+    , unordered-containers
 
   -- Directories containing source files.
   hs-source-dirs:   src
