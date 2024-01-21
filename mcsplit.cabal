@@ -60,6 +60,7 @@ library
 
   -- Modules exported by the library.
   exposed-modules:
+    Data.Graph.Random
     MCIS.Examples
     MCIS.McSplit
     Search.DFS
@@ -73,10 +74,12 @@ library
   -- Other library packages from which modules are imported.
   build-depends:
     , array
-    , base        ^>=4.17.2.1
+    , base                  ^>=4.17.2.1
     , containers
     , hashable
+    , MonadRandom
     , mtl
+    , random
     , unordered-containers
 
   -- Directories containing source files.
@@ -88,6 +91,7 @@ library
 executable mcsplit
   -- Import common warning flags.
   import:           warnings
+  ghc-options:      -O2 -rtsopts
 
   -- .hs or .lhs file containing the Main module.
   main-is:          Main.hs
@@ -100,8 +104,10 @@ executable mcsplit
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base     ^>=4.17.2.1
+    , base        ^>=4.17.2.1
+    , containers
     , mcsplit
+    , random
 
   -- Directories containing source files.
   hs-source-dirs:   app
@@ -111,12 +117,15 @@ executable mcsplit
 
 executable mcsplit-benchmark
   import:           warnings
-  ghc-options:      -O2
+  ghc-options:      -O2 -rtsopts
   main-is:          Main.hs
   build-depends:
-    , base       ^>=4.17.2.1
+    , base         ^>=4.17.2.1
+    , containers
     , criterion
     , mcsplit
+    , MonadRandom
+    , random
 
   hs-source-dirs:   benchmark
   default-language: GHC2021
