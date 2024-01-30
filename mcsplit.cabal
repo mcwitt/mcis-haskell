@@ -63,7 +63,6 @@ library
     Data.Graph.Random
     MCIS.Examples
     MCIS.McSplit
-    Search.DFS
 
   -- Modules included in this library but not exported.
   -- other-modules:

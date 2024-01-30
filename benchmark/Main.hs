@@ -26,6 +26,6 @@ main =
               randomPairBenchmark n p = withRandomPair n p $ \ ~(g1, g2) ->
                 bench ("n=" ++ show n ++ ", " ++ "p=" ++ show p) $
                   nf (MCIS.McSplit.mcis g1) g2
-           in [randomPairBenchmark 30 0.07]
+           in [randomPairBenchmark 10 0.1]
         )
     ]
