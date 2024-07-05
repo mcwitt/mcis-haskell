@@ -1,5 +1,6 @@
 module MCIS.McSplit (mcis) where
 
+import Control.Monad (when)
 import Control.Monad.State
 import Data.Array ((!))
 import Data.Function (on)
