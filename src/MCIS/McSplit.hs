@@ -40,8 +40,8 @@ extend g1 g2 = go
                           (Map.insert v1 v2 mapping)
                           ( concatMap
                               ( \(u1s, u2s) ->
-                                  let !(u1sa, u1sb) = partition (adj g1 v1) u1s
-                                      !(u2sa, u2sb) = partition (adj g2 v2) u2s
+                                  let (u1sa, u1sb) = partition (adj g1 v1) u1s
+                                      (u2sa, u2sb) = partition (adj g2 v2) u2s
                                    in [(u1sa, u2sa), (u1sb, u2sb)]
                               )
                               ((v1s, delete v2 v2s) : labelClasses)
